@@ -4,5 +4,6 @@ CONFIG = {
     "port": 8883,
     "username": "RustyHive",
     "password": "Jammerlap!234",
-    "topic": "sensorData"
+    "topic": "sensorData",
+    "sensir_id": "sensor_1"
 }

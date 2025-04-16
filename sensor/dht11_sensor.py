@@ -1,23 +1,21 @@
 import board
 import adafruit_dht
-import time
-from sensor.sensor_data import SensorData
+from .base_sensor import BaseSensor
 
-class DHT11Sensor:
-    def __init__(self, pin=board.D4, sensor_id="Sensor_02"):
-        self.sensor_id = sensor_id
-        self.device = adafruit_dht.DHT11(pin, use_pulseio=False)
+class DHT11Sensor(BaseSensor):
+    def __init__(self, sensor_id):
+        super().__init__(sensor_id)
+        self.sensor = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
     def read(self):
         try:
-            temp = self.device.temperature
-            hum = self.device.humidity
-            if temp is not None and hum is not None:
-                timestamp = time.strftime("%H:%M")
-                return SensorData(self.sensor_id, temp, hum, timestamp)
-        except RuntimeError as e:
-            print(f"[Sensor] Read error: {e}")
-        return None
+            return {
+                "temperature": self.sensor.temperature,
+                "humidity": self.sensor.humidity
+            }
+        except Exception as e:
+            print(f"[DHT11] Error: {e}")
+            return None
 
     def shutdown(self):
-        self.device.exit()
+        self.sensor.exit()
